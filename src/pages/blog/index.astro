@@ -1,0 +1,42 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import FormattedDate from "../../components/FormattedDate.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog")).sort(
+  (a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
+);
+---
+
+<BaseLayout>
+  <section class="flex flex-wrap">
+    {
+      posts.map((post) => (
+        <div class="w-1/2 p-4 -ml-5">
+          <div class="w-full mx-auto bg-black rounded-lg shadow-md overflow-hidden">
+			<img
+                class="object-cover h-48 w-full"
+                src="/placeholder-hero.jpg"
+                alt="Card Image"
+              />
+              <div class="p-6">
+                <h3 class="text-xl font-semibold mb-2">{post.data.title}</h3>
+                <p class="text-gray-600">
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                  Aenean ac fermentum dolor. Donec mollis dictum lorem id
+                  vestibulum.
+                </p>
+				<p><FormattedDate date={post.data.pubDate}> </p>
+                <a
+					href={`/blog/${post.slug}/`}
+                  class="mt-4 inline-block px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                  Read More
+                </a>
+              </div>
+			</div>
+        </div>
+      ))
+    }
+  </section>
+</BaseLayout>

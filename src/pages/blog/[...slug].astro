@@ -1,0 +1,51 @@
+---
+import { CollectionEntry, getCollection } from 'astro:content';
+import BlogPost from '../../layouts/BlogPost.astro';
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import FormattedDate from '../../components/FormattedDate.astro';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog');
+	return posts.map((post) => ({
+		params: { slug: post.slug },
+		props: post,
+	}));
+}
+type Props = CollectionEntry<'blog'>;
+
+const post = Astro.props;
+const { Content } = await post.render();
+---
+
+<BaseLayout>
+	<div class="flex flex-col">
+		<h1 class="flex py-5 text-3xl">{post.data.title}</h1>
+	<article class="flex flex-col">
+		{post.data.heroImage && <img class="rounded-md" width={720} height={360} src={post.data.heroImage} alt="" />}
+
+		<div class="flex flex-col mx-auto pt-5">
+			<Content />
+		</div>
+
+	</article>
+
+	</div>
+	
+	<!-- <main>
+		<article>
+			{post.data.heroImage && <img width={720} height={360} src={post.data.heroImage} alt="" />}
+			<h1 class="title">{post.data.title}</h1>
+			<FormattedDate date={post.data.pubDate} />
+			{
+				(
+					<div class="last-updated-on">
+						Last updated on <FormattedDate date={post.data.pubDate} />
+					</div>
+				)
+			}
+			<hr />
+			<slot />
+		</article>
+	</main> -->
+</BaseLayout>
+
